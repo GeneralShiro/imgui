@@ -18697,7 +18697,16 @@ ImGuiID ImGui::DockBuilderSplitNode(ImGuiID id, ImGuiDir split_dir, float size_r
         return 0;
     }
 
-    IM_ASSERT(!node->IsSplitNode()); // Assert if already Split
+    //IM_ASSERT(!node->IsSplitNode()); // Assert if already Split
+    if (node->IsSplitNode()) {
+        ImGuiID id_at_dir = node->ChildNodes[(split_dir == ImGuiDir_Left || split_dir == ImGuiDir_Up) ? 0 : 1]->ID;
+        ImGuiID id_at_opposite_dir = node->ChildNodes[(split_dir == ImGuiDir_Left || split_dir == ImGuiDir_Up) ? 1 : 0]->ID;
+        if (out_id_at_dir)
+            *out_id_at_dir = id_at_dir;
+        if (out_id_at_opposite_dir)
+            *out_id_at_opposite_dir = id_at_opposite_dir;
+        return id_at_dir;
+    }
 
     ImGuiDockRequest req;
     req.Type = ImGuiDockRequestType_Split;
